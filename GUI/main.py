@@ -22,6 +22,7 @@ class logInDialog:
         # load window widgets
         self.loginui = QUiLoader().load(qfile_logIn)
         self.loginui.logInButton.clicked.connect(self.handleLogin)
+        self.loginui.resetButton.clicked.connect(self.handleReset)
 
     def handleLogin(self):
         StuNum, PassWord = self.loginui.stuNum.text(), self.loginui.password.text()
@@ -31,12 +32,24 @@ class logInDialog:
         try:
             jwcConnection.login()
         except Jxgl.NoUserError:
-            print("没有该学号")
-            exit(1)
+            QMessageBox.critical(self.loginui, "错误", "无该用户！")
         except Jxgl.LoginIncorrectError:
-            print("学号或密码错误")
-            exit(1)
-            print("登陆成功！\n")
+            QMessageBox.critical(self.loginui, "错误", "学号或密码错误!")
+
+    def handleReset(self):
+        self.loginui.stuNum.setText("")
+        self.loginui.password.setText("")
+
+
+class MainWindow:
+    def __init__(self):
+        qfile_mainWindows = QFile("ui/mainWindow.ui")
+        qfile_mainWindows.open(QFile.ReadOnly)
+        qfile_mainWindows.close()
+        # load window widgets
+        self.mainWindows = QUiLoader().load(qfile_mainWindows)
+
+
 
 
 def main():
